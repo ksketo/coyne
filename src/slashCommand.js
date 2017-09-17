@@ -1,6 +1,8 @@
 // src/slashCommand.js
 const commandParser = require('./commandParser')
+const validateCommand = require('./validateCommand')
 const helpCommand = require('./helpCommand')
+const getCoinInfo = require('./getCoinInfo')
 const coinr = require('coinr')
 
 
@@ -33,34 +35,35 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
   console.log({ command, coin })
   console.log('command parsed')
 
-  let text = 'invalid command'
+  let text = '',
+      error = validateCommand(command, coin)
 
-  if (!['price', 'gains', 'volume'].includes(command)) {
+  if (error) {
+    console.log('Found error in validateCommand')
+    console.log(error.message)
     return resolve({
-      text: helpCommand()
+      text,
+      attachments: [createErrorAttachment(error)]
     })
   }
 
   // return value
-  coinr(coin)
-    .then((result) => {
-      if (command === 'price') {
-        text = `Price of ${result.name} is $${result.price_usd}`
-      } else if (command === 'volume') {
-        text = `Volume of ${result.name} the last 24h is $${parseInt(result['24h_volume_usd'])/1000000}m`
-        console.log('print volume')
-      } else if (command === 'gains') {
-        text = `Price changes of ${result.name}: \n` +
-                `1h ${result.percent_change_1h} \n` +
-                `24h ${result.percent_change_24h} \n` +
-                `7d ${result.percent_change_7d} \n`
-        console.log('print gains')
-      }
-
-      return resolve({
-        text: text
+  if (coin) {
+    coinr(coin)
+      .then((result) => {
+        text = getCoinInfo(command, result)
+        return resolve({
+          text
+        })
       })
+  } else {
+    text = helpCommand()
+
+    return resolve({
+      text
     })
+  }
+
 })
 
 module.exports = slashCommandFactory

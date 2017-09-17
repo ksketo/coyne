@@ -1,6 +1,7 @@
 const fs = require('fs');
 const commands = JSON.parse(fs.readFileSync('config/commands.json', 'utf8'));
 
+
 const _helpAll = () => {
 	let command,
 			response = []
