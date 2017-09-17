@@ -1,0 +1,34 @@
+const fs = require('fs');
+const commands = JSON.parse(fs.readFileSync('config/commands.json', 'utf8'));
+
+const _helpAll = () => {
+	let command,
+			response = []
+	let index = 1
+
+	for (name in commands) {
+		command = commands[name];
+
+		if (!command.exclude) {
+			response.push(index++  + '. ' + _helpCommand(name));
+		}
+	}
+
+	return response.join('\n\n');
+};
+
+const _helpCommand = (name) => {
+	var response = [ commands[name].help, commands[name].description ];
+
+	return response.join('\n\n');
+};
+
+module.exports = (command) => {
+	let response = _helpAll()
+
+	if (command) {
+		response = _helpCommand(command)
+	}
+
+	return response
+};

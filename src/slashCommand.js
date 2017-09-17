@@ -1,5 +1,6 @@
 // src/slashCommand.js
 const commandParser = require('./commandParser')
+const helpCommand = require('./helpCommand')
 const coinr = require('coinr')
 
 
@@ -36,7 +37,7 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
 
   if (!['price', 'gains', 'volume'].includes(command)) {
     return resolve({
-      text: 'help'
+      text: helpCommand()
     })
   }
 

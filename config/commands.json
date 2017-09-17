@@ -1,0 +1,25 @@
+{
+	"help": {
+		"alias": [
+			"usage"
+		],
+		"help": "help [command](optional)",
+		"description": "To get help on all supported commands, or a specified command",
+		"exclude": true
+	},
+	"price": {
+		"help": "price #[coin-name]",
+		"description": "Fetches price in $ of the specified coin"
+	},
+	"volume": {
+		"help": "volume #[coin-name]",
+		"description": "Fetches 24h volume of the specified coin"
+	},
+	"gains": {
+		"help": "gains #[coin-name]",
+		"description": "Fetches percentage price changes of the specified coin"
+	},
+	"error": {
+		"exclude": true
+	}
+}
