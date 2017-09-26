@@ -1,35 +1,38 @@
-const fs = require('fs');
-const commands = JSON.parse(fs.readFileSync('config/commands.json', 'utf8'));
+const fs = require('fs')
+const commands = JSON.parse(fs.readFileSync('config/commands.json', 'utf8'))
 
 
 const _helpAll = () => {
-	let command,
-			response = []
-	let index = 1
+		let command,
+				response = []
+		let index = 1
 
-	for (name in commands) {
-		command = commands[name];
-
-		if (!command.exclude) {
-			response.push(index++  + '. ' + _helpCommand(name));
+		for (name in commands) {
+				command = commands[name]
+				if (!command.exclude) {
+						response.push(index++  + '. ' + _helpCommand(name))
+				}
 		}
-	}
 
-	return response.join('\n\n');
-};
+		return response.join('\n\n')
+}
 
 const _helpCommand = (name) => {
-	var response = [ commands[name].help, commands[name].description ];
-
-	return response.join('\n\n');
-};
+	try {
+			const response = [ commands[name].help, commands[name].description ]
+			return response.join('\n\n')
+	}
+	catch (err) {
+			throw new Error("You passed a command that doesn't exist")
+	}
+}
 
 module.exports = (command) => {
-	let response = _helpAll()
+		let response = _helpAll()
 
-	if (command) {
-		response = _helpCommand(command)
-	}
+		if (command) {
+				response = _helpCommand(command)
+		}
 
-	return response
-};
+		return response
+}

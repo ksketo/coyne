@@ -1,17 +1,15 @@
 // src/commandParser.js
-const tokenizer = require('string-tokenizer')
-
-
 const commandParser = (commandText) => {
-  const tokens = tokenizer()
-    .input(commandText)
-    .token('command', /(\w{3,})/)
-    .token('coin', /#(\w{3,})/)
-    .resolve()
+
+  let command = /(\w{3,})/i.exec(commandText)
+  let coin = /#(\w{3,})/.exec(commandText)
+
+  if (command) command = command[0]
+  if (coin) coin = coin[1]
 
   return {
-    command: tokens.command,
-    coin: tokens.coin
+    command,
+    coin
   }
 }
 

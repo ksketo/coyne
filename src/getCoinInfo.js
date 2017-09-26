@@ -1,4 +1,6 @@
 const getCoinInfo = (command, coinJSON) => {
+  let text = 'You probably typed a wrong command'
+  
   if (command === 'price') {
     text = `Price of ${coinJSON.name} is $${coinJSON.price_usd}`
   } else if (command === 'volume') {

@@ -17,6 +17,8 @@ const validateCommand = (command, coin) => {
   if (!isString(command) || !isString(coin)) {
     return new Error("Something looks wrong")
   }
+
+  return
 }
 
 module.exports = validateCommand
