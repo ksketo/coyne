@@ -35,7 +35,12 @@ describe('Test slashCommand', () => {
         })
     })
     it('fails for non-existin coin', () => {
-        console.log('to do')
+        body.text = 'price #adtok'
+        return slashCommand(body).then(result => {
+            expect(result.text).toEqual('')
+            expect(result.attachments[0].text)
+                .toEqual(expect.stringContaining("Couldn't fetch information for this coin"))
+        })
     })
     it('shows help for valid command and no coin', () => {
         body.text = 'help'
@@ -49,4 +54,8 @@ describe('Test slashCommand', () => {
             expect(result.text).toContain('Price of Ethereum is')
         })
     })
+    it('shows help for weird input - invalid command', () => {
+        console.log('to do')
+    })
+
 });

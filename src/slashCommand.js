@@ -51,10 +51,17 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
     if (coin) {
         coinr(coin)
           .then((result) => {
-            text = getCoinInfo(command, result)
-            return resolve({
-              text
-            })
+              text = getCoinInfo(command, result)
+              return resolve({
+                text
+              })
+          })
+          .catch(() => {
+              const error = {message: "Couldn't fetch information for this coin"}
+              return resolve({
+                  text,
+                  attachments: [createErrorAttachment(error)]
+              })
           })
     } else {
         text = helpCommand()

@@ -2,9 +2,14 @@
   "name": "coyne",
   "version": "0.0.1",
   "description": "A slack bot for cryptocurrencies",
+  "engines": {
+    "node": ">= 7.6.0"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "jest test --coverage"
+    "start": "echo '=> starting server' && node src/server.js",
+    "test": "echo '=> testing' && jest test --coverage",
+    "lint": "echo '=> linting' && jshint assets/scripts/*.js"
   },
   "author": "Konstantinos Faliagkas <kfaliagkas90@gmail.com> (http://kfaliagkas.com/)",
   "license": "ISC",
@@ -13,6 +18,7 @@
     "coinr": "^1.2.0",
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
+    "node-emoji": "^1.8.1",
     "request-promise-native": "^1.0.4",
     "string-tokenizer": "0.0.8"
   },
