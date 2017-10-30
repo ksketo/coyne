@@ -4,12 +4,21 @@ const validateCommand = require('./validateCommand')
 const helpCommand = require('./helpCommand')
 const getCoinInfo = require('./getCoinInfo')
 const coinr = require('coinr')
+const request = require('request')
+const fs = require('fs')
+const postChartData = require('./createPriceChart')
 
 
 const createErrorAttachment = (error) => ({
     color: 'danger',
     text: `*Error*:\n${error.message}`,
     mrkdwn_in: ['text']
+})
+
+const createChartAttachment = () => ({
+    color: '#36a64f',
+    text: `Chart`,
+    image_url: 'http://angularscript.com/wp-content/uploads/2014/11/angular-chart.js-Line-Chart.jpg'
 })
 
 const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reject) => {
@@ -37,6 +46,27 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
 
     let text = '',
         error = validateCommand(command, coin)
+
+
+    if (command == 'chart') {
+        // return resolve({
+        //     text,
+        //     attachments: [createChartAttachment()]
+        // })
+        return postChartData(coin)
+            .then(() => {
+                resolve({
+                    text: 'Coin chart',
+                })
+            })
+            .catch(() => {
+                const error = {message: "Couldn't create chart - is the coin name correct?"}
+                resolve({
+                    text,
+                    attachments: [createErrorAttachment(error)]
+                })
+            })
+    }
 
     if (error) {
         console.log('Found error in validateCommand')

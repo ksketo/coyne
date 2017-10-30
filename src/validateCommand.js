@@ -6,7 +6,7 @@ const validateCommand = (command, coin) => {
     return new Error('You need to define a command')
   }
 
-  if (!['price', 'volume', 'gains', 'help'].includes(command)) {
+  if (!['price', 'volume', 'gains', 'chart', 'help'].includes(command)) {
     return new Error("You haven't passed a correct command argument")
   }
 
