@@ -54,12 +54,12 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
         //     attachments: [createChartAttachment()]
         // })
         return postChartData(coin)
-            .then(() => {
+            .then(data => {
                 resolve({
                     text: 'Coin chart',
                 })
             })
-            .catch(() => {
+            .catch(err => {
                 const error = {message: "Couldn't create chart - is the coin name correct?"}
                 resolve({
                     text,

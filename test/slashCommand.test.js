@@ -34,7 +34,7 @@ describe('Test slashCommand', () => {
                 .toEqual(expect.stringContaining("You haven't passed a correct command argument"))
         })
     })
-    it('fails for non-existin coin', () => {
+    it('fails for non-existing coin', () => {
         body.text = 'price #adtok'
         return slashCommand(body).then(result => {
             expect(result.text).toEqual('')
@@ -57,5 +57,28 @@ describe('Test slashCommand', () => {
     it('shows help for weird input - invalid command', () => {
         console.log('to do')
     })
-
 });
+
+describe('Test chart command of slashCommand', () => {
+    it('returns price chart for valid coin input', () => {
+        expect.assertions(1)
+        //
+        // return postChartData('eth')
+        //     .then(result => {
+        //         expect(JSON.parse(result)['ok']).toBeTruthy();
+        //     })
+        body.text = 'chart #eth'
+        return slashCommand(body).then(result => {
+            expect(result.text).toBe('Coin chart')
+        })
+    })
+    it('creates error attachment for invalid coin', () => {
+      expect.assertions(1)
+
+      body.text = 'chart #nocoin'
+      return slashCommand(body).then(result => {
+        expect(result.attachments[0].text)
+            .toEqual(expect.stringContaining("Couldn't create chart"))
+      })
+    })
+})

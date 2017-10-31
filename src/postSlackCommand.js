@@ -2,7 +2,7 @@ const fs = require('fs')
 const rp = require('request-promise')
 
 
-const postSlackCommand = (outfile) => {
+const postSlackCommand = (outfile) => new Promise((resolve, reject) => {
     const options = {
         method: 'POST',
         url: 'https://slack.com/api/files.upload',
@@ -22,12 +22,12 @@ const postSlackCommand = (outfile) => {
     return rp(options)
         .then(function (body) {
             console.log('post succeeded')
-            console.log(body)
+            resolve(body)
         })
         .catch(function (err) {
             console.log('post failed')
-            console.log(err)
+            reject(err)
         })
-}
+})
 
 module.exports = postSlackCommand

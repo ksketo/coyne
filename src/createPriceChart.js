@@ -57,7 +57,7 @@ const poloniexChartData = (coin, start, end) => new Promise((resolve, reject) =>
           const labels = range(1, data.length);
           resolve([data, labels])
       })
-      .catch(console.error)
+      .catch(reject)
 })
 
 const postChartData = (coin) => new Promise((resolve, reject) => {
@@ -65,20 +65,26 @@ const postChartData = (coin) => new Promise((resolve, reject) => {
     const start = Math.floor(Date.now() / 1000) - days * 86400
     const end = Math.floor(Date.now() / 1000)
 
-    poloniexChartData(coin, start, end)
+    return poloniexChartData(coin, start, end)
       .then((args) => {
           let data, labels;
           [data, labels] = args;
-          drawChart(data, labels)
+          return drawChart(data, labels)
               .then(data => {
                 const outFile = path.join(outputDir, "output_chart.png");
-                postSlackCommand(outFile);
+                return postSlackCommand(outFile)
+                    .then(resolve)
+                    .catch(reject)
               })
-              .catch(console.log)
+              .catch(err => {
+                  console.log(err)
+                  reject(err)
+              })
       })
       .catch((err) => {
           console.log('error found in poloniex api');
           console.log(err.message)
+          reject(err.message)
       })
 })
 
