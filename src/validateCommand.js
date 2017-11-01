@@ -10,15 +10,13 @@ const validateCommand = (command, coin) => {
     return new Error("You haven't passed a correct command argument")
   }
 
-  if (command!='help' && !coin) {
+  if (command !== 'help' && !coin) {
     return new Error("What's the coin you're looking for?")
   }
 
   if (!isString(command) || !isString(coin)) {
-    return new Error("Something looks wrong")
+    return new Error('Something looks wrong')
   }
-
-  return
 }
 
 module.exports = validateCommand

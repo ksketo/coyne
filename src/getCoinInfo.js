@@ -12,7 +12,7 @@ const getCoinInfo = (command, coinJSON) => {
   if (command === 'price') {
     text = `Price of ${coinJSON.name} is $${coinJSON.price_usd}`
   } else if (command === 'volume') {
-    text = `Volume of ${coinJSON.name} the last 24h is $${parseInt(coinJSON['24h_volume_usd'])/1000000}m`
+    text = `Volume of ${coinJSON.name} the last 24h is $${parseInt(coinJSON['24h_volume_usd']) / 1000000}m`
   } else if (command === 'gains') {
     text = `Price changes of ${coinJSON.name}: \n` +
             `1h ${_emojifyPrice(coinJSON.percent_change_1h)}% \n` +

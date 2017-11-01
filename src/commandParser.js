@@ -1,6 +1,5 @@
 // src/commandParser.js
 const commandParser = (commandText) => {
-
   let command = /(\w{3,})/i.exec(commandText)
   let coin = /#(\w{3,})/.exec(commandText)
 
