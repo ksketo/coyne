@@ -19,6 +19,10 @@
 		"help": "gains #[coin-name]",
 		"description": "Fetches percentage price changes of the specified coin"
 	},
+	"chart": {
+		"help": "chart #[coin-name]",
+		"description": "Displays pricing history"
+	},
 	"error": {
 		"exclude": true
 	}

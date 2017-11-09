@@ -1,16 +1,36 @@
 # Coyne
 
-***Work in progress***
+Your cryptocurrency companion on Slack
+
+***Note: Work in progress***
 
 ### Usage
 
-```bash
-1. price \#[coin-name]
+Commands are in the format
+
+```
+/coyne [command] #[coin]
+```
+
+for example
+
+```
+/coyne price #eth
+```
+
+The available commands are:
+```
+1. help
+
+2. price
 Fetches price in $ of the specified coin
 
-2. volume \#[coin-name]
+3. volume
 Fetches 24h volume of the specified coin
 
-3. gains \#[coin-name]
+4. gains
 Fetches percentage price changes of the specified coin
+
+5. chart
+Displays pricing history
 ```
