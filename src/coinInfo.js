@@ -1,4 +1,6 @@
 const emoji = require('node-emoji')
+const postChartData = require('./createPriceChart')
+const coinr = require('coinr')
 
 const _emojifyPrice = (price) => {
   const priceNum = parseFloat(price)
@@ -6,7 +8,7 @@ const _emojifyPrice = (price) => {
   return emoji.emojify(upDownEmj + ' ' + Math.abs(priceNum))
 }
 
-const getCoinInfo = (command, coinJSON) => {
+const coinJsonToText = (command, coinJSON) => {
   let text = 'You probably typed a wrong command'
 
   if (command === 'price') {
@@ -23,4 +25,28 @@ const getCoinInfo = (command, coinJSON) => {
   return text
 }
 
-module.exports = getCoinInfo
+const getCoinInfo = (command, coin) => new Promise((resolve, reject) => {
+  if (command === 'chart') {
+    return postChartData(coin)
+            .then(() => resolve('Coin chart'))
+            .catch(() => {
+              const error = {message: "Couldn't create chart - is the coin name correct?"}
+              reject(error)
+            })
+  } else {
+    coinr(coin)
+        .then((coinJSON) => {
+          const text = coinJsonToText(command, coinJSON)
+          resolve(text)
+        })
+        .catch(() => {
+          const error = {message: "Couldn't fetch information for this coin"}
+          reject(error)
+        })
+  }
+})
+
+module.exports = {
+  coinJsonToText,
+  getCoinInfo
+}

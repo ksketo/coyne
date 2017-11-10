@@ -59,15 +59,12 @@ describe('Test slashCommand', () => {
 
 describe('Test chart command of slashCommand', () => {
   it('returns price chart for valid coin input', () => {
-    expect.assertions(1)
-        //
-        // return postChartData('eth')
-        //     .then(result => {
-        //         expect(JSON.parse(result)['ok']).toBeTruthy();
-        //     })
+    expect.assertions(2)
+
     body.text = 'chart #eth'
     return slashCommand(body).then(result => {
       expect(result.text).toBe('Coin chart')
+      expect(result.attachments).toBeUndefined()
     })
   })
   it('creates error attachment for invalid coin', () => {

@@ -2,9 +2,7 @@
 const commandParser = require('./commandParser')
 const validateCommand = require('./validateCommand')
 const helpCommand = require('./helpCommand')
-const getCoinInfo = require('./getCoinInfo')
-const coinr = require('coinr')
-const postChartData = require('./createPriceChart')
+const coinInfo = require('./coinInfo')
 
 const createErrorAttachment = (error) => ({
   color: 'danger',
@@ -36,33 +34,13 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
   console.log('Pass body text to command parser')
   console.log(body.text)
 
-    // parse command and coin
+  // parse command and coin
   const { command, coin } = commandParser(body.text)
   console.log({ command, coin })
   console.log('command parsed')
 
   let text = ''
   let error = validateCommand(command, coin)
-
-  if (command === 'chart') {
-        // return resolve({
-        //     text,
-        //     attachments: [createChartAttachment()]
-        // })
-    return postChartData(coin)
-            .then(data => {
-              resolve({
-                text: 'Coin chart'
-              })
-            })
-            .catch(err => {
-              const error = {message: "Couldn't create chart - is the coin name correct?"}
-              resolve({
-                text,
-                attachments: [createErrorAttachment(error)]
-              })
-            })
-  }
 
   if (error) {
     console.log('Found error in validateCommand')
@@ -73,22 +51,20 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
     })
   }
 
-    // return value
+  // return value
   if (coin) {
-    coinr(coin)
-          .then((result) => {
-            text = getCoinInfo(command, result)
-            return resolve({
-              text
-            })
+    return coinInfo.getCoinInfo(command, coin)
+        .then(text => {
+          resolve({
+            text: text
           })
-          .catch(() => {
-            const error = {message: "Couldn't fetch information for this coin"}
-            return resolve({
-              text,
-              attachments: [createErrorAttachment(error)]
-            })
+        })
+        .catch(error => {
+          resolve({
+            text: '',
+            attachments: [createErrorAttachment(error)]
           })
+        })
   } else {
     text = helpCommand()
 
