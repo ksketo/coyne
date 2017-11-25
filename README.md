@@ -33,4 +33,7 @@ Fetches percentage price changes of the specified coin
 
 5. chart
 Displays pricing history
+
+6. top
+Displays list of top 10 coins by market cap
 ```

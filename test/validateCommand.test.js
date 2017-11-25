@@ -1,6 +1,6 @@
 const validateCommand = require('../src/validateCommand')
 
-describe('Test validateCommand', () => {
+describe('validateCommand', () => {
   it('returns undefined for correct input', () => {
     expect(validateCommand('price', 'eth')).toBeUndefined()
   })

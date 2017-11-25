@@ -1,6 +1,6 @@
 const commandParser = require('../src/commandParser')
 
-describe('Test commandParser', () => {
+describe('commandParser', () => {
   it('parses price command with coin', () => {
     expect(commandParser('price #eth')).toEqual({
       command: 'price',

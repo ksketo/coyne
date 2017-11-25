@@ -41,4 +41,11 @@ describe('getCoinInfo', () => {
             .toEqual(expect.stringContaining("Couldn't fetch information for"))
     })
   })
+  it('returns list of coins for [top] command', () => {
+    expect.assertions(1)
+
+    return coinInfo.getCoinInfo('top').catch(result => {
+      expect(result).toContain('1. Bitcoin')
+    })
+  })
 })

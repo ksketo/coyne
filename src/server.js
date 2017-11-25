@@ -17,7 +17,6 @@ const slashCommand = slashCommandFactory(slackToken)
 app.post('/', (req, res) => {
   slashCommand(req.body)
     .then((result) => {
-      console.log('here')
       console.log(result)
       return res.json(result)
     })

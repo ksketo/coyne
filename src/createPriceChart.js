@@ -46,7 +46,7 @@ const drawChart = (data, labels) => new Promise((resolve, reject) => {
 })
 
 const poloniexChartData = (coin, start, end) => new Promise((resolve, reject) => {
-  poloniex.returnChartData(`USDT_${coin.toUpperCase()}`, 86400, start, end)
+  return poloniex.returnChartData(`USDT_${coin.toUpperCase()}`, 86400, start, end)
       .then((prices) => {
         const data = prices.map(elem => elem.weightedAverage)
         function range (start, end) {

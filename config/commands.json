@@ -23,6 +23,10 @@
 		"help": "chart #[coin-name]",
 		"description": "Displays pricing history"
 	},
+	"top": {
+		"help": "top",
+		"description": "Displays list of top 10 coins by market cap"
+	},
 	"error": {
 		"exclude": true
 	}

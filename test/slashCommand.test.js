@@ -7,7 +7,7 @@ const body = {
   text: 'price #eth'
 }
 
-describe('Test slashCommand', () => {
+describe('slashCommand', () => {
   it('returns error attachement for empty body', () => {
     return slashCommand(undefined).then(result => {
       expect(result.text).toBe('')
@@ -35,9 +35,7 @@ describe('Test slashCommand', () => {
   it('fails for non-existing coin', () => {
     body.text = 'price #adtok'
     return slashCommand(body).then(result => {
-      expect(result.text).toEqual('')
-      expect(result.attachments[0].text)
-                .toEqual(expect.stringContaining("Couldn't fetch information for this coin"))
+      expect(result.text).toContain('1.')
     })
   })
   it('shows help for valid command and no coin', () => {

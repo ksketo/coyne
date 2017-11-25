@@ -1,6 +1,6 @@
 const helpCommand = require('../src/helpCommand')
 
-describe('Test helpCommand', () => {
+describe('helpCommand', () => {
   it('returns command help for correct input', () => {
     const response = 'price #[coin-name]\n\n' +
                           'Fetches price in $ of the specified coin'

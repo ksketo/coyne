@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 
 dotenv.load()
 
-describe('Test postSlackCommand', () => {
+describe('postSlackCommand', () => {
   it('posts successfully for valid request configuration', () => {
     expect.assertions(1)
 

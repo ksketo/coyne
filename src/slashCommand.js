@@ -52,17 +52,18 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
   }
 
   // return value
-  if (coin) {
+  if (coin || command === 'top') {
     return coinInfo.getCoinInfo(command, coin)
         .then(text => {
           resolve({
             text: text
           })
         })
-        .catch(error => {
-          resolve({
-            text: '',
-            attachments: [createErrorAttachment(error)]
+        .catch(() => {
+          text = helpCommand()
+
+          return resolve({
+            text
           })
         })
   } else {

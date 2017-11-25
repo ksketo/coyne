@@ -3,7 +3,7 @@ const dotenv = require('dotenv')
 
 dotenv.load()
 
-describe('Test postChartData function', () => {
+describe('postChartData', () => {
   it('posts successfully for valid coin input', () => {
     expect.assertions(1)
 
