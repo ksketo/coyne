@@ -2,7 +2,7 @@
 const isString = (value) => typeof value === 'string' || !value
 
 const validateCommand = (command, coin) => {
-  const commandList = ['price', 'volume', 'gains', 'chart', 'help', 'top']
+  const commandList = ['price', 'volume', 'gains', 'chart', 'help', 'top', 'gainers', 'losers']
 
   if (!command) {
     return new Error('You need to define a command')
@@ -12,7 +12,7 @@ const validateCommand = (command, coin) => {
     return new Error("You haven't passed a correct command argument")
   }
 
-  if (command !== 'help' && command !== 'top' && !coin) {
+  if (command !== 'help' && command !== 'top' && command !== 'gainers' && command !== 'losers' && !coin) {
     return new Error("What's the coin you're looking for?")
   }
 

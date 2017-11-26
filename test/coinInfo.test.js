@@ -20,6 +20,7 @@ describe('coinJsonToText', () => {
     expect(coinInfo.coinJsonToText('volume', coinJSON)).toBe('Volume of Ethereum the last 24h is $1m')
     expect(coinInfo.coinJsonToText('gains', coinJSON)).toBe(emoji.emojify(gainsRes))
   })
+
   it('warns user for wrong command', () => {
     expect(coinInfo.coinJsonToText('wrong command', coinJSON)).toBe('You probably typed a wrong command')
   })
@@ -33,6 +34,7 @@ describe('getCoinInfo', () => {
       expect(result).toEqual(expect.stringContaining('Price of Ethereum'))
     })
   })
+
   it('returns error for invalid coin', () => {
     expect.assertions(1)
 
@@ -41,11 +43,30 @@ describe('getCoinInfo', () => {
             .toEqual(expect.stringContaining("Couldn't fetch information for"))
     })
   })
+
   it('returns list of coins for [top] command', () => {
     expect.assertions(1)
 
-    return coinInfo.getCoinInfo('top').catch(result => {
+    return coinInfo.getCoinInfo('top').then(result => {
       expect(result).toContain('1. Bitcoin')
+    })
+  })
+
+  it('returns list of coins for [gainers] command', () => {
+    expect.assertions(2)
+
+    return coinInfo.getCoinInfo('gainers').then(result => {
+      expect(result).toContain('1.')
+      expect(result).toContain('10.')
+    })
+  })
+
+  it('returns list of coins for [losers] command', () => {
+    expect.assertions(2)
+
+    return coinInfo.getCoinInfo('losers').then(result => {
+      expect(result).toContain('1.')
+      expect(result).toContain('10.')
     })
   })
 })

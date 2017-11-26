@@ -7,25 +7,29 @@ describe('commandParser', () => {
       coin: 'eth'
     })
   })
+
   it('parses volume command with coin', () => {
     expect(commandParser('volume #eth')).toEqual({
       command: 'volume',
       coin: 'eth'
     })
   })
+
   it('parses gains command with coin', () => {
     expect(commandParser('gains #eth')).toEqual({
       command: 'gains',
       coin: 'eth'
     })
   })
-  test('returns null for coin when missing', () => {
+
+  it('returns null for coin when missing', () => {
     expect(commandParser('help')).toEqual({
       command: 'help',
       coin: null
     })
   })
-  test('returns null for coin when passed without #', () => {
+
+  it('returns null for coin when passed without #', () => {
     expect(commandParser('gains eth')).toEqual({
       command: 'gains',
       coin: null

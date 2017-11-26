@@ -2,7 +2,8 @@ const fetch = require('node-fetch')
 const Poloniex = require('poloniex-api-node')
 
 const poloniex = new Poloniex()
-const coinmarketcapUrl = 'https://api.coinmarketcap.com/v1/ticker/?start=0&limit=10'
+const coinmarketcapUrlTop = 'https://api.coinmarketcap.com/v1/ticker/?start=0&limit=10'
+const coinmarketcapUrl = 'https://api.coinmarketcap.com/v1/ticker/?limit=100'
 
 function fetchJSON (url) {
   return fetch(url)
@@ -14,7 +15,7 @@ function fetchJSON (url) {
 }
 
 const top = () => new Promise((resolve, reject) => {
-  return fetchJSON(coinmarketcapUrl)
+  return fetchJSON(coinmarketcapUrlTop)
     .then(data => {
       const filteredData = data.map(e => {
         return {
@@ -29,6 +30,42 @@ const top = () => new Promise((resolve, reject) => {
     .catch(reject)
 })
 
+const gainers = () => new Promise((resolve, reject) => {
+  return fetchJSON(coinmarketcapUrl)
+    .then(data => {
+      const filteredData = data
+        .sort((a, b) => parseFloat(b['percent_change_24h']) - parseFloat(a['percent_change_24h']))
+        .slice(0, 10)
+        .map(e => {
+          return {
+            name: e.name,
+            percent_change_24h: e['percent_change_24h']
+          }
+        })
+      resolve(filteredData)
+    })
+    .catch(reject)
+})
+
+const losers = () => new Promise((resolve, reject) => {
+  return fetchJSON(coinmarketcapUrl)
+    .then(data => {
+      const filteredData = data
+        .sort((a, b) => parseFloat(a['percent_change_24h']) - parseFloat(b['percent_change_24h']))
+        .slice(0, 10)
+        .map(e => {
+          return {
+            name: e.name,
+            percent_change_24h: e['percent_change_24h']
+          }
+        })
+      resolve(filteredData)
+    })
+    .catch(reject)
+})
+
 module.exports = {
-  top
+  top,
+  gainers,
+  losers
 }

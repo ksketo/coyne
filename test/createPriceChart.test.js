@@ -12,6 +12,7 @@ describe('postChartData', () => {
               expect(JSON.parse(result)['ok']).toBeTruthy()
             })
   })
+
   it('fails for invalid coin', () => {
     expect.assertions(1)
 

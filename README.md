@@ -36,4 +36,10 @@ Displays pricing history
 
 6. top
 Displays list of top 10 coins by market cap
+
+7. gainers
+Displays list of top 10 coins by price percentage increase (24h)
+
+8. losers
+Displays list of top 10 coins by price percentage loss (24h)
 ```

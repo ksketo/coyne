@@ -27,6 +27,14 @@
 		"help": "top",
 		"description": "Displays list of top 10 coins by market cap"
 	},
+	"gainers": {
+		"help": "gainers",
+		"description": "Displays list of top 10 coins by price percentage increase (24h)"
+	},
+	"losers": {
+		"help": "losers",
+		"description": "Displays list of top 10 coins by price percentage loss (24h)"
+	},
 	"error": {
 		"exclude": true
 	}

@@ -6,6 +6,7 @@ describe('helpCommand', () => {
                           'Fetches price in $ of the specified coin'
     expect(helpCommand('price')).toBe(response)
   })
+
   it('returns warning for wrong input', () => {
     function helpPredictions () {
       helpCommand('predictions')

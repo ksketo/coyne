@@ -27,10 +27,19 @@ const coinJsonToText = (command, coinJSON) => {
   return text
 }
 
-const topCoinData = (coinJSON) => {
+const _topCoinJsonToString = (coinJSON) => {
   let text = ''
   coinJSON.forEach((e, index) => {
     text += `${index + 1}. ${e.name}: $${e.price_usd} \n`
+  })
+
+  return text
+}
+
+const _percentageChangeJsonToString = (coinJSON) => {
+  let text = ''
+  coinJSON.forEach((e, index) => {
+    text += `${index + 1}. ${e.name}: ${e.percent_change_24h} \n`
   })
 
   return text
@@ -46,7 +55,15 @@ const getCoinInfo = (command, coin) => new Promise((resolve, reject) => {
             })
   } else if (command === 'top') {
     return coinAPI.top()
-            .then(data => resolve(topCoinData(data)))
+            .then(data => resolve(_topCoinJsonToString(data)))
+            .catch(reject)
+  } else if (command === 'gainers') {
+    return coinAPI.gainers()
+            .then(data => resolve(_percentageChangeJsonToString(data)))
+            .catch(reject)
+  } else if (command === 'losers') {
+    return coinAPI.losers()
+            .then(data => resolve(_percentageChangeJsonToString(data)))
             .catch(reject)
   } else {
     coinr(coin)

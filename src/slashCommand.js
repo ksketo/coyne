@@ -52,7 +52,7 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
   }
 
   // return value
-  if (coin || command === 'top') {
+  if (coin || ['top', 'gainers', 'losers'].includes(command)) {
     return coinInfo.getCoinInfo(command, coin)
         .then(text => {
           resolve({

@@ -16,6 +16,7 @@ describe('postSlackCommand', () => {
               expect(JSON.parse(result)['ok']).toBeTruthy()
             })
   })
+
   it('fails to make a post request for invalid file name', () => {
     expect.assertions(1)
 
@@ -24,6 +25,7 @@ describe('postSlackCommand', () => {
               expect(result.name).toBe('RequestError')
             })
   })
+
   it('fails to make a post request for invalid slack token', () => {
     expect.assertions(1)
 
