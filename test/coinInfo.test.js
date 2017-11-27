@@ -12,17 +12,24 @@ const coinJSON = {
 
 describe('coinJsonToText', () => {
   it('gives coin info for [price], [volume] and [gains] commands', () => {
-    const gainsRes = `Price changes of Ethereum: \n` +
-                          `1h :point_up: 0.1% \n` +
-                          `24h :point_down: 0.1% \n` +
-                          `7d :point_up: 0.01% \n`
-    expect(coinInfo.coinJsonToText('price', coinJSON)).toBe('Price of Ethereum is $257')
-    expect(coinInfo.coinJsonToText('volume', coinJSON)).toBe('Volume of Ethereum the last 24h is $1m')
-    expect(coinInfo.coinJsonToText('gains', coinJSON)).toBe(emoji.emojify(gainsRes))
-  })
-
-  it('warns user for wrong command', () => {
-    expect(coinInfo.coinJsonToText('wrong command', coinJSON)).toBe('You probably typed a wrong command')
+    const gainsRes = `1h *:point_up: 0.1%* \n` +
+                     `24h *:point_down: 0.1%* \n` +
+                     `7d *:point_up: 0.01%* \n`
+    expect(coinInfo.coinJsonToText('price', coinJSON))
+      .toMatchObject({
+        title: 'Ethereum price',
+        text: 'Price of Ethereum is *$257*'
+      })
+    expect(coinInfo.coinJsonToText('volume', coinJSON))
+      .toMatchObject({
+        title: 'Ethereum volume',
+        text: 'Volume of Ethereum the last 24h is *$1m*'
+      })
+    expect(coinInfo.coinJsonToText('gains', coinJSON))
+      .toMatchObject({
+        title: 'Ethereum price changes',
+        text: emoji.emojify(gainsRes)
+      })
   })
 })
 
@@ -31,7 +38,8 @@ describe('getCoinInfo', () => {
     expect.assertions(1)
 
     return coinInfo.getCoinInfo('price', 'eth').then(result => {
-      expect(result).toEqual(expect.stringContaining('Price of Ethereum'))
+      expect(result.attachments[0].title)
+        .toBe('Ethereum price')
     })
   })
 
@@ -48,7 +56,7 @@ describe('getCoinInfo', () => {
     expect.assertions(1)
 
     return coinInfo.getCoinInfo('top').then(result => {
-      expect(result).toContain('1. Bitcoin')
+      expect(result.attachments[0].text).toContain('1. Bitcoin')
     })
   })
 
@@ -56,8 +64,8 @@ describe('getCoinInfo', () => {
     expect.assertions(2)
 
     return coinInfo.getCoinInfo('gainers').then(result => {
-      expect(result).toContain('1.')
-      expect(result).toContain('10.')
+      expect(result.attachments[0].text).toContain('1.')
+      expect(result.attachments[0].text).toContain('10.')
     })
   })
 
@@ -65,8 +73,8 @@ describe('getCoinInfo', () => {
     expect.assertions(2)
 
     return coinInfo.getCoinInfo('losers').then(result => {
-      expect(result).toContain('1.')
-      expect(result).toContain('10.')
+      expect(result.attachments[0].text).toContain('1.')
+      expect(result.attachments[0].text).toContain('10.')
     })
   })
 })

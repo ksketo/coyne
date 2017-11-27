@@ -9,7 +9,7 @@ const _helpAll = () => {
   for (let name in commands) {
     command = commands[name]
     if (!command.exclude) {
-      response.push(index++ + '. ' + _helpCommand(name))
+      response.push(`${index++}. ${_helpCommand(name)}`)
     }
   }
 
