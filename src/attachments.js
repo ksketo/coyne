@@ -16,8 +16,16 @@ const createResultAttachment = (title, text) => ({
   mrkdwn_in: ['text']
 })
 
+const createArrayAttachment = (title, text) => ({
+  color: '#8870ff',
+  title: `${title}`,
+  text: "```\n" + `${text}` + "```\n",
+  mrkdwn_in: ['text']
+})
+
 module.exports = {
   createErrorAttachment,
   createHelpAttachment,
-  createResultAttachment
+  createResultAttachment,
+  createArrayAttachment
 }
