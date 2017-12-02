@@ -3,44 +3,49 @@ const mkdir = require('mkdir-p')
 const ChartjsNode = require('chartjs-node')
 const Poloniex = require('poloniex-api-node')
 const postSlackCommand = require('./postSlackCommand')
+const chartJsOptions = require('../config/chartjs')
+const {mod, range} = require('./utils')
 
 let poloniex = new Poloniex()
 const outputDir = path.join(__dirname, 'output')
 mkdir.sync(outputDir)
 
-const drawChart = (data, labels) => new Promise((resolve, reject) => {
-  const chartJsOptions = {
-    'type': 'line',
-    'data': {
-      'labels': labels,
-      'datasets': [{
-        'label': 'My First dataset',
-        'data': data,
-        'borderColor': 'rgba(75,192,192,1)',
-        'borderWidth': 1
-      }]
-    },
-    'options': {
-      'scales': {
-        'yAxes': [{
-          'ticks': {
-            'beginAtZero': true
-          }
-        }]
-      }
-    }
+const months = [
+  'Jan',
+  'Feb',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'Aug',
+  'Sept',
+  'Oct',
+  'Nov',
+  'Dec'
+]
+
+const _indexToMonth = (currentMonth, currentDay, end) => range(1, end).map(n => {
+  let tMonth = currentMonth
+  if (currentDay === 1) {
+    currentMonth = mod(currentMonth - 1, 12)
+    currentDay = 30
+  } else {
+    currentDay -= 1
   }
+  return months[tMonth]
+}).reverse()
 
-  const chartNode = new ChartjsNode(600, 600)
+const drawChart = (data, labels, coin) => new Promise((resolve, reject) => {
+  const chartNode = new ChartjsNode(600, 300)
 
-  chartNode.drawChart(chartJsOptions)
+  chartNode.drawChart(chartJsOptions(data, labels, coin))
         .then(streamResult => {
           const outFile = path.join(outputDir, 'output_chart.png')
           resolve(chartNode.writeImageToFile('image/png', outFile))
         })
         .catch(err => {
-          console.log('error found in chartNode')
-          console.log(err)
+          console.error(err)
           reject(err)
         })
 })
@@ -49,10 +54,10 @@ const poloniexChartData = (coin, start, end) => new Promise((resolve, reject) =>
   return poloniex.returnChartData(`USDT_${coin.toUpperCase()}`, 86400, start, end)
       .then((prices) => {
         const data = prices.map(elem => elem.weightedAverage)
-        function range (start, end) {
-          return Array(end - start + 1).fill().map((_, idx) => start + idx)
-        }
-        const labels = range(1, data.length)
+        const d = new Date()
+        let currentDay = d.getDate()
+        let currentMonth = d.getMonth()
+        const labels = _indexToMonth(currentMonth, currentDay, 100)
         resolve([data, labels])
       })
       .catch(reject)
@@ -67,7 +72,7 @@ const postChartData = (coin) => new Promise((resolve, reject) => {
       .then((args) => {
         let data, labels;
         [data, labels] = args
-        return drawChart(data, labels)
+        return drawChart(data, labels, coin)
               .then(data => {
                 const outFile = path.join(outputDir, 'output_chart.png')
                 return postSlackCommand(outFile)
