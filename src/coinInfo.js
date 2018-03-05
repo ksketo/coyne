@@ -4,7 +4,6 @@ const postChartData = require('./createPriceChart')
 const coinAPI = require('./coinAPI')
 const {createResultAttachment, createArrayAttachment} = require('./attachments')
 
-
 const _emojifyPrice = (price) => {
   const priceNum = parseFloat(price)
   const upDownEmj = priceNum > 0 ? ':point_up:' : ':point_down:'
@@ -22,9 +21,9 @@ const coinJsonToText = (command, coinJSON) => {
     text = `Volume of ${coinJSON.name} the last 24h is *$${parseInt(coinJSON['24h_volume_usd']) / 1000000}m*`
     title = `${coinJSON.name} ${command}`
   } else if (command === 'gains') {
-    text =  `1h *${_emojifyPrice(coinJSON.percent_change_1h)}%* \n` +
-            `24h *${_emojifyPrice(coinJSON.percent_change_24h)}%* \n` +
-            `7d *${_emojifyPrice(coinJSON.percent_change_7d)}%* \n`
+    text = `1h *${_emojifyPrice(coinJSON.percent_change_1h)}%* \n` +
+           `24h *${_emojifyPrice(coinJSON.percent_change_24h)}%* \n` +
+           `7d *${_emojifyPrice(coinJSON.percent_change_7d)}%* \n`
     title = `${coinJSON.name} price changes`
   }
 
@@ -98,14 +97,7 @@ const _arraifyGains = (coinJSON) => {
 }
 
 const getCoinInfo = (command, coin) => new Promise((resolve, reject) => {
-  if (command === 'chart') {
-    return postChartData(coin)
-            .then(() => resolve('Coin chart'))
-            .catch(() => {
-              const error = {message: "Couldn't create chart - is the coin name correct?"}
-              reject(error)
-            })
-  } else if (command === 'top') {
+  if (command === 'top') {
     return coinAPI.top()
             .then(data => {
               const title = 'Top coins by market cap :money_mouth_face:'

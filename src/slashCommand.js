@@ -5,7 +5,6 @@ const helpCommand = require('./helpCommand')
 const coinInfo = require('./coinInfo')
 const {createErrorAttachment, createHelpAttachment} = require('./attachments')
 
-
 const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reject) => {
   if (!body) {
     return resolve({
