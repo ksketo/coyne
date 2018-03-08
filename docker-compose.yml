@@ -1,6 +1,19 @@
 version: '2'
 
 services:
+  coyne-server:
+    image: node:8.1.2
+    command: bash -c "cd /workdir && npm run start"
+    volumes:
+      - ./:/workdir
+    ports:
+      - 80:80
+    networks:
+      - back-tier
+    depends_on:
+      - api
+      - redis
+
   api:
     image: node:8.1.2
     command: bash -c "cd /workdir && npm run api"

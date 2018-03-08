@@ -1,8 +1,10 @@
 const emoji = require('node-emoji')
-const coinr = require('coinr')
-const postChartData = require('./createPriceChart')
-const coinAPI = require('./coinAPI')
+const redis = require('redis')
+const {promisify} = require('util')
 const {createResultAttachment, createArrayAttachment} = require('./attachments')
+
+const client = redis.createClient(6379, 'redis')
+const getAsync = promisify(client.get).bind(client)
 
 const _emojifyPrice = (price) => {
   const priceNum = parseFloat(price)
@@ -28,24 +30,6 @@ const coinJsonToText = (command, coinJSON) => {
   }
 
   return {title, text}
-}
-
-const _topCoinJsonToString = (coinJSON) => {
-  let text = ''
-  coinJSON.forEach((e, index) => {
-    text += `${index + 1}. ${e.name}: *$${e.price_usd}* \n`
-  })
-
-  return text
-}
-
-const _percentageChangeJsonToString = (coinJSON) => {
-  let text = ''
-  coinJSON.forEach((e, index) => {
-    text += `${index + 1}. ${e.name}: *${e.percent_change_24h}%* \n`
-  })
-
-  return text
 }
 
 const _arraifyTop = (coinJSON) => {
@@ -96,57 +80,49 @@ const _arraifyGains = (coinJSON) => {
   return text
 }
 
-const getCoinInfo = (command, coin) => new Promise((resolve, reject) => {
+const getCoinInfo = (command, coin) => {
   if (command === 'top') {
-    return coinAPI.top()
-            .then(data => {
-              const title = 'Top coins by market cap :money_mouth_face:'
-              resolve({
-                text: '',
-                attachments: [createArrayAttachment(title, _arraifyTop(data))]
-              })
-            })
-            .catch(err => {
-              console.error(err)
-              reject(err)
-            })
+    return getAsync('top')
+      .then(data => JSON.parse(data))
+      .then(data => {
+        const title = 'Top coins by market cap :money_mouth_face:'
+        return {
+          text: '',
+          attachments: [createArrayAttachment(title, _arraifyTop(data))]
+        }
+      })
   } else if (command === 'gainers') {
-    return coinAPI.gainers()
-            .then(data => {
-              const title = 'Highest 24h gainers :money_mouth_face:'
-
-              resolve({
-                text: '',
-                attachments: [createArrayAttachment(title, _arraifyGains(data))]
-              })
-            })
-            .catch(reject)
+    return getAsync('gainers')
+      .then(data => JSON.parse(data))
+      .then(data => {
+        const title = 'Highest 24h gainers :money_mouth_face:'
+        return {
+          text: '',
+          attachments: [createArrayAttachment(title, _arraifyGains(data))]
+        }
+      })
   } else if (command === 'losers') {
-    return coinAPI.losers()
-            .then(data => {
-              const title = 'Biggest 24h losers :cold_sweat:'
-
-              resolve({
-                text: '',
-                attachments: [createArrayAttachment(title, _arraifyGains(data))]
-              })
-            })
-            .catch(reject)
+    return getAsync('losers')
+      .then(data => JSON.parse(data))
+      .then(data => {
+        const title = 'Biggest 24h losers :cold_sweat:'
+        return {
+          text: '',
+          attachments: [createArrayAttachment(title, _arraifyGains(data))]
+        }
+      })
   } else {
-    coinr(coin)
-        .then((coinJSON) => {
-          const {title, text} = coinJsonToText(command, coinJSON)
-          resolve({
-            text: '',
-            attachments: [createResultAttachment(title, text)]
-          })
-        })
-        .catch(() => {
-          const error = {message: "Couldn't fetch information for this coin"}
-          reject(error)
-        })
+    return getAsync(coin.toUpperCase())
+      .then(data => JSON.parse(data))
+      .then((coinJSON) => {
+        const {title, text} = coinJsonToText(command, coinJSON)
+        return {
+          text: '',
+          attachments: [createResultAttachment(title, text)]
+        }
+      })
   }
-})
+}
 
 module.exports = {
   coinJsonToText,

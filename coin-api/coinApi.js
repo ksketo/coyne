@@ -1,11 +1,11 @@
 const fetch = require('node-fetch')
 const redis = require('redis')
-const sleep = require('sleep')
 const {promisify} = require('util')
+const {interval} = require('../src/utils')
 
 const COINMARKETCAP_URL = 'https://api.coinmarketcap.com/v1/ticker/?limit=100'
-const client = redis.createClient(6379, 'redis')
 
+const client = redis.createClient(6379, 'redis')
 const setAsync = promisify(client.set).bind(client)
 
 /* Modified fetch request the returns the body of the response. */
@@ -16,6 +16,7 @@ function fetchJSON (url) {
       if (body.Response === 'Error') throw body.Message
       return body
     })
+    .catch(console.error)
 }
 
 /* Returns data for 10 top coins by market cap. */
@@ -27,7 +28,7 @@ function top (data) {
       '24h_volume_usd': e['24h_volume_usd'],
       market_cap_usd: e.market_cap_usd
     }
-  })
+  }).slice(0, 10)
 
   return setAsync('top', JSON.stringify(filteredData))
     .then()
@@ -46,7 +47,7 @@ function gainers (data) {
       }
     })
 
-  return setAsync('gainers', filteredData.toString())
+  return setAsync('gainers', JSON.stringify(filteredData))
     .then()
     .catch(console.log)
 }
@@ -71,23 +72,24 @@ function losers (data) {
 /* Returns a set of Promises, each storing information per coin on Redis. */
 function storeInfoPerCoin (data) {
   return data.map(entry => {
-    return setAsync(entry.id, JSON.stringify(entry))
+    return setAsync(entry.symbol, JSON.stringify(entry))
   })
 }
 
 // ************************************
 // Main
 // ************************************
-
-while (true) {
-  fetchJSON(COINMARKETCAP_URL).then(data => {
-    Promise.all([top(data), gainers(data), losers(data)])
-    return data
-  }).then(data => {
-    return Promise.all(storeInfoPerCoin(data))
-  }).catch(e => {
-    console.error('An error happened: ' + e)
-  })
-
-  sleep.sleep(5 * 60)
+function fetchApiData () {
+  return fetchJSON(COINMARKETCAP_URL)
+    .then(data => {
+      Promise.all([top(data), gainers(data), losers(data)])
+      return data
+    }).then(data => {
+      return Promise.all(storeInfoPerCoin(data))
+    }).catch(e => {
+      console.error('An error happened: ' + e)
+    })
 }
+
+fetchApiData()
+interval(fetchApiData, 5 * 60 * 1000)

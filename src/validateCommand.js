@@ -2,7 +2,7 @@
 const isString = (value) => typeof value === 'string' || !value
 
 const validateCommand = (command, coin) => {
-  const commandList = ['price', 'volume', 'gains', 'chart', 'help', 'top', 'gainers', 'losers']
+  const commandList = ['price', 'volume', 'gains', 'help', 'top', 'gainers', 'losers']
 
   if (!command) {
     return new Error('You need to define a command')
