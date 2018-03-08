@@ -5,7 +5,6 @@ const helpCommand = require('./helpCommand')
 const coinInfo = require('./coinInfo')
 const {createErrorAttachment, createHelpAttachment} = require('./attachments')
 
-
 const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reject) => {
   if (!body) {
     return resolve({
@@ -38,17 +37,17 @@ const slashCommandFactory = (slackToken) => (body) => new Promise((resolve, reje
   // return value
   if (coin || ['top', 'gainers', 'losers'].includes(command)) {
     return coinInfo.getCoinInfo(command, coin)
-        .then(resolve)
-        .catch(() => {
-          error = {
-            message: 'Are you sure this is the coin you are looking for?'
-          }
+      .then(resolve)
+      .catch(() => {
+        error = {
+          message: 'Are you sure this is the coin you are looking for?'
+        }
 
-          return resolve({
-            text: '',
-            attachments: [createErrorAttachment(error)]
-          })
+        return resolve({
+          text: '',
+          attachments: [createErrorAttachment(error)]
         })
+      })
   } else {
     text = helpCommand()
 
