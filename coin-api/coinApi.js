@@ -26,9 +26,10 @@ function top (data) {
       name: e.name,
       price_usd: e.price_usd,
       '24h_volume_usd': e['24h_volume_usd'],
-      market_cap_usd: e.market_cap_usd
+      market_cap_usd: e.market_cap_usd,
+      symbol: e.symbol
     }
-  }).slice(0, 10)
+  })
 
   return setAsync('top', JSON.stringify(filteredData))
     .then()
