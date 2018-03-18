@@ -6,18 +6,18 @@ const { createMessageAdapter } = require('@slack/interactive-messages')
 const { commandAction, coinAction } = require('./actions')
 const { router } = require('./routes')
 
-const app = new Express()
-app.use(bodyParser.urlencoded({extended: true}))
-
+// Global variables
 dotenv.load()
 const {SLACK_TOKEN: slackToken, PORT} = process.env
 const port = PORT || 80
 
-// Initialize using verification token from environment variables
+const app = new Express()
+// Middleware for Slack interactive components
 const slackMessages = createMessageAdapter(slackToken)
 
+app.use(bodyParser.urlencoded({extended: true}))
+
 // Mount the event handler on a route
-// NOTE: you must mount to a path that matches the Request URL and/or Options URL that was configured
 app.use('/slack/actions', slackMessages.expressMiddleware())
 
 // Attach action handlers

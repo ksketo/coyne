@@ -1,25 +1,8 @@
 const coinInfo = require('./coinInfo')
+const { coinSearchForm } = require('../components/coinForm')
 
-function _coinInteractiveForm (slackReqObj, btn, res) {
-  const response = (options) => {
-    return {
-      response_type: 'in_channel',
-      channel: slackReqObj.channel_id,
-      attachments: [{
-        text: 'For which coin? :slightly_smiling_face:',
-        fallback: 'For which coin? :slightly_smiling_face:',
-        color: '#2c963f',
-        attachment_type: 'default',
-        callback_id: 'coin_selection',
-        actions: [{
-          name: 'coins_select_menu',
-          text: 'Choose a coin...',
-          type: 'select',
-          options: options
-        }]
-      }]
-    }
-  }
+function _form (payload, btn, res) {
+  const response = (options) => coinSearchForm(payload, options)
 
   return coinInfo.coinList()
     .then(data => data.map(s => {
@@ -29,8 +12,6 @@ function _coinInteractiveForm (slackReqObj, btn, res) {
       }
     }))
     .then(options => {
-      console.log('Options returned')
-      console.log(options)
       if (res) {
         return res.json(response(options))
       } else {
@@ -38,31 +19,26 @@ function _coinInteractiveForm (slackReqObj, btn, res) {
       }
     })
     .catch(e => {
-      console.error('An error occured')
-      console.error(e)
+      console.error('ERROR in coinInfo: ' + e)
     })
 }
 
-// ******************************************************************************
-// Executes when user clicks an interactive button or selects an option from the
-// interactive menu.
-// Returns either:
-//    A - Market/Coin data result or
-//    B - Interactive input form with list of coins
-// ******************************************************************************
-
+// Executes when user clicks an interactive button or selects an option from the interactive menu.
 function commandAction (payload) {
   const btn = payload.actions[0].value
 
   if (['top', 'gainers', 'losers'].includes(btn)) {
+    // Returns market data result for top coins of corresponding list
     return coinInfo.getCoinInfo(btn)
   } else if (['price', 'volume', 'gains'].includes(btn)) {
-    return _coinInteractiveForm(payload, btn)
+    // Returns interactive input form for list of coins
+    return _form(payload, btn)
   } else {
     return 'Hmm, that was unexpected. We\'re looking into it.'
   }
 }
 
+// Executes when user selects a coin from the interactive select form.
 function coinAction (payload) {
   const btn = JSON.parse(payload.actions[0].selected_options[0].value)
 

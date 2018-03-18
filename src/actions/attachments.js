@@ -5,7 +5,7 @@ const createErrorAttachment = (error) => ({
 })
 
 const createHelpAttachment = (text) => ({
-  text: "```\n" + `${text}` + "```\n",
+  text: '```\n' + `${text}` + '```\n',
   mrkdwn_in: ['text']
 })
 
@@ -19,7 +19,7 @@ const createResultAttachment = (title, text) => ({
 const createArrayAttachment = (title, text) => ({
   color: '#8870ff',
   title: `${title}`,
-  text: "```\n" + `${text}` + "```\n",
+  text: '```\n' + `${text}` + '```\n',
   mrkdwn_in: ['text']
 })
 
