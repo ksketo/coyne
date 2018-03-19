@@ -83,7 +83,7 @@ const _arraifyGains = (coinJSON) => {
 const getCoinInfo = (command, coin) => {
   if (command === 'top') {
     return getAsync('top')
-      .then(data => JSON.parse(data))
+      .then(data => JSON.parse(data).slice(0, 10))
       .then(data => {
         const title = 'Top coins by market cap :money_mouth_face:'
         return {
@@ -124,7 +124,13 @@ const getCoinInfo = (command, coin) => {
   }
 }
 
+const coinList = () => {
+  return getAsync('top')
+    .then(data => JSON.parse(data).map(c => c.symbol))
+}
+
 module.exports = {
   coinJsonToText,
-  getCoinInfo
+  getCoinInfo,
+  coinList
 }

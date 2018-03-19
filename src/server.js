@@ -1,27 +1,31 @@
 // src/server.js
 const Express = require('express')
 const bodyParser = require('body-parser')
-const slashCommandFactory = require('./slashCommand')
 const dotenv = require('dotenv')
+const { createMessageAdapter } = require('@slack/interactive-messages')
+const { commandAction, coinAction } = require('./actions')
+const { router } = require('./routes')
 
-const app = new Express()
-app.use(bodyParser.urlencoded({extended: true}))
-
+// Global variables
 dotenv.load()
 const {SLACK_TOKEN: slackToken, PORT} = process.env
-
 const port = PORT || 80
 
-const slashCommand = slashCommandFactory(slackToken)
+const app = new Express()
+// Middleware for Slack interactive components
+const slackMessages = createMessageAdapter(slackToken)
 
-app.post('/', (req, res) => {
-  slashCommand(req.body)
-    .then((result) => {
-      console.log(result)
-      return res.json(result)
-    })
-    .catch(console.error)
-})
+app.use(bodyParser.urlencoded({extended: true}))
+
+// Mount the event handler on a route
+app.use('/slack/actions', slackMessages.expressMiddleware())
+
+// Attach action handlers
+slackMessages
+  .action('command_selection', commandAction)
+  .action('coin_selection', coinAction)
+
+app.use(router)
 
 app.listen(port, () => {
   console.log(`Server started at localhost:${port}`)

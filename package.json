@@ -15,6 +15,7 @@
   "author": "Konstantinos Faliagkas <kfaliagkas90@gmail.com> (http://kfaliagkas.com/)",
   "license": "ISC",
   "dependencies": {
+    "@slack/interactive-messages": "^0.2.0",
     "body-parser": "^1.18.0",
     "canvas": "^1.6.7",
     "dotenv": "^4.0.0",
