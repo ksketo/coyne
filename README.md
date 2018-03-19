@@ -6,40 +6,23 @@ Your cryptocurrency companion on Slack
 
 ### Usage
 
-Commands are in the format
-
-```
-/coyne [command] #[coin]
-```
-
-for example
-
-```
-/coyne price #eth
-```
-
 The available commands are:
 ```
-1. help
-
-2. price
+1. price
 Fetches price in $ of the specified coin
 
-3. volume
+2. volume
 Fetches 24h volume of the specified coin
 
-4. gains
+3. gains
 Fetches percentage price changes of the specified coin
 
-5. chart
-Displays pricing history
-
-6. top
+4. top
 Displays list of top 10 coins by market cap
 
-7. gainers
+5. gainers
 Displays list of top 10 coins by price percentage increase (24h)
 
-8. losers
+6. losers
 Displays list of top 10 coins by price percentage loss (24h)
 ```
