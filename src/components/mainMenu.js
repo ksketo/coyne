@@ -1,5 +1,4 @@
 const MAIN_MENU_LAYOUT = {
-  'response_type': 'in_channel',
   'text': 'What data would you like to get?',
   'attachments': [
     {
